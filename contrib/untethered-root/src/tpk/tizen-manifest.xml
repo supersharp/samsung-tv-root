@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<manifest xmlns="http://tizen.org/ns/packages" api-version="6.0" package="com.selfroot.boot" version="1.0.17">
+    <profile name="tv" />
+    <description>Selfroot boot agent</description>
+    <ui-application appid="com.selfroot.boot" exec="com.selfroot.boot.dll" launch_mode="single" multiple="false" nodisplay="true" on-boot="false" taskmanage="true" type="dotnet">
+        <label>Selfroot</label>
+        <metadata key="http://samsung.com/tv/metadata/background-update" value="anytime" />
+        <metadata key="http://samsung.com/tv/metadata/built-in-app" value="true" />
+    </ui-application>
+    <tv-info api-version="6.6.0">
+        <infolink>T-INFOLINK2021-1012</infolink>
+    </tv-info>
+    <build-info id="9999999">
+        <app-info exec="com.selfroot.boot.dll" id="com.selfroot.boot" />
+    </build-info>
+</manifest>

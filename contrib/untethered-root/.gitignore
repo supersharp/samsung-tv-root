@@ -1,0 +1,21 @@
+# Build outputs
+**/bin/
+**/out/
+**/art/
+*.dll
+*.exe
+*.tpk
+*.wgt
+
+# Signing keys / certs / tokens (never commit)
+*.pem
+*.p12
+*.pwd
+token
+*.signature
+*.tar.gz
+
+# Tizen CLI profile state
+*.crt
+*.csr
+*.pri
