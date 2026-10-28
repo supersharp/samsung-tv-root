@@ -76,6 +76,12 @@ a .NET Core 3.1-capable build and the upstream archive-root payload. The UEP
 tool needs root and the platform-specific page/offset; it is not a drop-in
 address for another firmware.
 
+**Generating the certificate to sign the package and getting the SDB binary:**
+- Download and install the Tizen Studio Baseline: https://download.tizen.org/sdk/Installer/Latest/
+- Open Package Manager and install the certificate extensions.
+- Open Certificate Manager and create a Samsung Certificate profile
+- Keep defaults and sign in with your Samsung Account, you will need to enter your TV's Unique ID during the creation.
+
 ## Safety
 
 - Use only on hardware you own or are authorised to examine. Root and UEP
