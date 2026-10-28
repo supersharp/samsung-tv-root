@@ -38,8 +38,8 @@ and word offset are platform-specific and are not included in this repository.
   before any slower work, re-asserts permissions and rotates its persistent logs
   at 1 MiB.
 - **Debloat reference** — the applied app/unit inventory, a boot mask fragment, the
-  optional TizenTube service re-enable and a launcher-gated Home-shell caution,
-  under `contrib/debloat/`.
+  optional TizenTube service re-enable, a launcher-gated Home-shell caution and
+  the storage-cleanup results (≈1.8 GB freed), under `contrib/debloat/`.
 - **Generic UEP tool** — `uepctl` reads or flips the UEP/SFD state word; the
   physical page and offset are supplied as arguments, so no device address is
   baked into the source.

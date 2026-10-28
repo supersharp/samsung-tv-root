@@ -6,7 +6,7 @@ This directory contains sanitised source and notes for three Tizen 6.0 areas:
 | --- | --- |
 | [`untethered-root/`](untethered-root/) | Clean signed TPK that re-acquires root at boot, a `ghservice`-slot stub, the sdb/archive-root agent and the token-gated relay |
 | [`uep/`](uep/) | Generic UEP/SFD state-word tool; the physical page and word offset are supplied at runtime |
-| [`debloat/`](debloat/) | The applied app/unit debloat inventory, a `launch.sh` mask fragment, the optional TizenTube service fix and the launcher-gated Home-shell caution |
+| [`debloat/`](debloat/) | The applied app/unit debloat inventory, a `launch.sh` mask fragment, the optional TizenTube service fix, the launcher-gated Home-shell caution and the storage-cleanup results |
 
 Reference device: `QE65QN95AATXXU` (2021 Neo QLED, `21_NIKEM2_QTV`),
 `T-NKM2DEUC-2310.0` / build `T-NKM2DEUC-REL-202607211844`, Tizen 6.0.0,

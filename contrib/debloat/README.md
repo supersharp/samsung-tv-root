@@ -143,5 +143,7 @@ The reference deployment keeps a package-DB copy before each pass under
 - No Samsung binaries or firmware.
 - No per-device backup database. Take your own before writing.
 
-See [TIZENTUBE.md](TIZENTUBE.md) for the optional TizenTube service re-enable, and
-[HOME-SERVICES.md](HOME-SERVICES.md) for the launcher-gated Home-shell services.
+See [TIZENTUBE.md](TIZENTUBE.md) for the optional TizenTube service re-enable,
+[HOME-SERVICES.md](HOME-SERVICES.md) for the launcher-gated Home-shell services,
+and [STORAGE-CLEANUP.md](STORAGE-CLEANUP.md) for the two `/opt` cleanup passes
+(≈1.8 GB freed on the reference TV).
