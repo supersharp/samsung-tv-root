@@ -37,6 +37,9 @@ and word offset are platform-specific and are not included in this repository.
 - **Idempotent boot script** — `launch.sh` runs once per boot, starts the relay
   before any slower work, re-asserts permissions and rotates its persistent logs
   at 1 MiB.
+- **Debloat reference** — the applied app/unit inventory, a boot mask fragment, the
+  optional TizenTube service re-enable and a launcher-gated Home-shell caution,
+  under `contrib/debloat/`.
 - **Generic UEP tool** — `uepctl` reads or flips the UEP/SFD state word; the
   physical page and offset are supplied as arguments, so no device address is
   baked into the source.
@@ -63,6 +66,7 @@ and word offset are platform-specific and are not included in this repository.
 - [`contrib/untethered-root/`](contrib/untethered-root/) — agent, stub, relay,
   archive payload and TPK build sources, plus the method notes.
 - [`contrib/uep/`](contrib/uep/) — `uepctl` source, build file and runbook.
+- [`contrib/debloat/`](contrib/debloat/) — debloat inventory, masks and the TizenTube edit.
 - Upstream `src/`, `payloads/`, `docs/`, `tools/`, `swu/`, `tests/` — retained
   from upstream for the host-side root/control tooling.
 
