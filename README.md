@@ -31,7 +31,12 @@ and word offset are platform-specific and are not included in this repository.
 - **Clean signed TPK** — the payload is a normal, independently signed Tizen
   app; the squatted service slot is reduced to a small launcher stub.
 - **Token-gated relay** — a root command relay on the TV, one shell command per
-  line, intended for LAN management.
+  line, intended for LAN management. It is single-instance, bounded (30 s
+  command timeout, four clients, 1 MiB output) and no longer dies when a client
+  disconnects mid-response.
+- **Idempotent boot script** — `launch.sh` runs once per boot, starts the relay
+  before any slower work, re-asserts permissions and rotates its persistent logs
+  at 1 MiB.
 - **Generic UEP tool** — `uepctl` reads or flips the UEP/SFD state word; the
   physical page and offset are supplied as arguments, so no device address is
   baked into the source.

@@ -29,13 +29,49 @@ PKG = "archive-root-00b0000000000001"
 
 LAUNCH = """#!/bin/sh
 exec 2>&1
+LOG=/home/owner/share/tmp/selfroot-relay/launch.log
+mkdir -p /home/owner/share/tmp/selfroot-relay
+
+# The TPK can be triggered more than once per boot, and the payload runs
+# launch.sh more than once per trigger; make the whole pass idempotent.
+if ! mkdir /run/selfroot-launch.lock 2>/dev/null; then
+  echo "already applied this boot; skipping" >>"$LOG"
+  exit 0
+fi
+
 {
   echo "SELFROOT uid=$(id -u) gid=$(id -g)"
   date
 } > /home/owner/share/tmp/selfroot-evidence.txt
 chmod 666 /home/owner/share/tmp/selfroot-evidence.txt
-mkdir -p /home/owner/share/tmp/selfroot-relay
-nohup /usr/bin/dotnet /opt/usr/share/selfroot/relay/RootRelay.dll 26103 /opt/usr/share/selfroot/token </dev/null >>/home/owner/share/tmp/selfroot-relay/relay.log 2>&1 &
+
+# Re-assert permissions every boot so a manual chmod cannot drift.
+# art/ stays world-readable: the TPK copies it before escalating.
+chmod 755 /opt/usr/share/selfroot /opt/usr/share/selfroot/art 2>/dev/null
+chmod 700 /opt/usr/share/selfroot/relay 2>/dev/null
+chmod 644 /opt/usr/share/selfroot/art/* 2>/dev/null
+chmod 600 /opt/usr/share/selfroot/token 2>/dev/null
+
+# Bound the persistent logs: one 1 MiB rolled generation per file.
+rotate_log() {
+  f="$1"
+  [ -f "$f" ] || return 0
+  sz=$(wc -c <"$f" 2>/dev/null || echo 0)
+  if [ "$sz" -gt 1048576 ]; then
+    mv -f "$f" "$f.1" 2>/dev/null
+    : >"$f"
+  fi
+}
+for f in /home/owner/share/tmp/selfroot-agent.log /home/owner/share/tmp/selfroot-stub.log /home/owner/share/tmp/selfroot-relay/relay.log "$LOG"; do
+  rotate_log "$f"
+done
+
+# Management channel first. The relay is single-instance, so a duplicate start
+# exits instead of leaving a second listener behind.
+nohup /usr/bin/dotnet /opt/usr/share/selfroot/relay/RootRelay.dll 26103 \\
+  /opt/usr/share/selfroot/token </dev/null \\
+  >>/home/owner/share/tmp/selfroot-relay/relay.log 2>&1 &
+echo "relay requested" >>"$LOG"
 echo started
 """
 

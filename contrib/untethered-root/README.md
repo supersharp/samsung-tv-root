@@ -56,13 +56,39 @@ is a 5 KB launcher that almost never changes.
 
 ---
 
+## Relay and boot script
+
+`launch.sh` runs as root from the signed archive. It is idempotent per boot
+(`/run/selfroot-launch.lock`; the TPK can be triggered more than once), starts
+the relay **before** any slower work, re-asserts the directory and token
+permissions, and rotates its persistent logs at 1 MiB with one `.1` generation.
+
+The relay itself is hardened:
+
+- **Single instance.** It holds `/run/selfroot-relay.lock`, so a duplicate start
+  logs and exits `0` instead of leaving a second listener behind.
+- **Broken pipes are contained.** Every reply write is guarded; a client that
+  disconnects mid-response drops only that connection. The old build died with
+  `IOException: Broken pipe` and took the management channel with it.
+- **Bounded work.** 30 s command timeout (reply `[exit:124]`), at most four
+  concurrent clients, 1 MiB per stream, 8 KiB command line.
+- **Token checks.** Constant-time comparison; a token file that is not exactly
+  32 characters is a hard error instead of being zero-padded.
+- **Log rotation.** `relay.log` rolls to `relay.log.1` at 1 MiB.
+
+The relay is not supervised. If it ever exits, a power cycle restarts the boot
+chain and the relay; the hardening above removes the crash that used to require
+that.
+
+---
+
 ## Repository layout
 
 | Path | Purpose |
 | --- | --- |
 | `src/agent/Program.cs` | The TPK agent: sdb handshake, injection, archive-root handoff |
 | `src/stub/Program.cs` | The `ghservice`-slot launcher (`aul_launch_app`) |
-| `src/relay/Program.cs` | The root management relay (token-gated, binds `:26103`) |
+| `src/relay/Program.cs` | The root management relay (single-instance, token-gated, binds `:26103`) |
 | `src/payload/build_artifacts.py` | RSA key + passwd + signed `launch.sh` tar for archive-root |
 | `src/tpk/tizen-manifest.xml` | TPK manifest (ui-app, `nodisplay`, `dotnet`) |
 | `src/tpk/build_tpk.py` | Packages the unsigned TPK |
@@ -185,6 +211,8 @@ sqlite3 /opt/dbspace/.pkgmgr_parser.db \
 
 - The relay listens on **all interfaces**; the token travels in cleartext. Treat
   `<tv-ip>:26103` as a root service: keep the token secret or firewall the port.
+  The token must be exactly 32 characters; the relay refuses to start otherwise
+  and compares it in constant time.
 - Root is `uid 0` inside Tizen's SMACK policy (`User`), not an unrestricted
   kernel context; unsigned native ELF still cannot run (UEP).
 - Firmware updates can overwrite the squatted service. Restore the original app
